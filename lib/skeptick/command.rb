@@ -1,5 +1,9 @@
 require 'shellwords'
-require 'posix/spawn'
+if defined?(JRUBY_VERSION)
+  require 'spoon'
+else
+  require 'posix/spawn'
+end
 require 'skeptick/error'
 
 module Skeptick
