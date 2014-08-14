@@ -37,14 +37,18 @@ module Skeptick
         Skeptick.log("Skeptick Command: #{command}")
       end
 
-      im_process = POSIX::Spawn::Child.new(command, opts)
+      if defined?(JRUBY_VERSION)
+        im_process = Spoon.posix_spawn('/usr/bin/env', file_actions, spawn_attr, [command, *opts].join(' '))
+      else
+        im_process = POSIX::Spawn::Child.new(command, opts)
 
-      if !im_process.success?
-        raise ImageMagickError,
-          "ImageMagick error\nCommand: #{command}\nSTDERR:\n#{im_process.err}"
+        if !im_process.success?
+          raise ImageMagickError,
+            "ImageMagick error\nCommand: #{command}\nSTDERR:\n#{im_process.err}"
+        end
+
+        im_process.status
       end
-
-      im_process.status
     end
   end
 end
