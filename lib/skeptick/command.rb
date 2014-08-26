@@ -38,7 +38,7 @@ module Skeptick
       end
 
       if defined?(JRUBY_VERSION)
-        im_process = Spoon.posix_spawn('/usr/bin/env', file_actions, spawn_attr, [command, *opts].join(' '))
+        system(command)
       else
         im_process = POSIX::Spawn::Child.new(command, opts)
 
